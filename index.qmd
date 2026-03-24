@@ -1,5 +1,5 @@
 ---
-title: "Data visualisering"
+title: "Visualisering av data"
 subtitle: "med ggplot2"
 author: "Martin Jonsson"
 institute: "Centrum för hjärtstoppsforskning, Karolinska Insitutet"
@@ -115,7 +115,7 @@ Komponenter:
 
 -   Du behöver inte komma ihåg allt...
 
--   Men bra att veta att det inte är slumpmässia ord
+-   Men bra att veta att det inte är slumpmässiga ord
 
 ## Varför visualisera data?
 
@@ -1181,8 +1181,7 @@ gapminder %>%
   ggplot() + 
   geom_line(aes(x=year, y=lifeExp, group=country, color=continent)) + 
   scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
-  gghighlight(highlighted_countries==1, 
-              calculate_per_facet = TRUE, 
+  gghighlight(highlighted_countries==1, calculate_per_facet = TRUE, 
               label_params = list(size=3),
               unhighlighted_params = list(linewidth = 0.3,
                                           colour = alpha("grey", 0.7),
@@ -1207,8 +1206,7 @@ gapminder %>%
   ggplot() + 
   geom_line(aes(x=year, y=lifeExp, group=country, color=continent)) +
   scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
-  gghighlight(highlighted_countries==1, 
-              calculate_per_facet = TRUE, 
+  gghighlight(highlighted_countries==1, calculate_per_facet = TRUE, 
               label_params = list(size=3),
               unhighlighted_params = list(linewidth = 0.3,
                                           colour = alpha("grey", 0.5),
@@ -1239,10 +1237,8 @@ p <- gapminder %>%  # <2>
   ggplot() + 
   geom_line(aes(x=year, y=lifeExp, group=country, color=continent)) +
   scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
-  gghighlight(highlighted_countries==1, 
-              calculate_per_facet = TRUE, 
-              label_params = list(size=3),
-              label_key = country,
+  gghighlight(highlighted_countries==1, calculate_per_facet = TRUE, 
+              label_params = list(size=3), label_key = country,
               unhighlighted_params = list(linewidth = 0.3,
                                           colour = alpha("grey", 0.5),
                                           linetype = "dashed",
@@ -1255,7 +1251,7 @@ p <- gapminder %>%  # <2>
 labs(x="Life expectancy",
     y="Year")
 
-#plotly::ggplotly(p) # <3>
+plotly::ggplotly(p) # <3>
 ```
 
 1.  Ladda paketet `plotly`
@@ -1271,6 +1267,7 @@ Plotta "high density region" genom att använda funktionen `geom_hdr()`
 #| fig-width: 12
 #| fig-height: 8
 #| classes: shrink-code
+
 if (!require('ggdensity')) install.packages('ggdensity'); library('ggdensity') # <1>
 
 gapminder %>% filter(year %in% c(1952, 2007)) %>% 
@@ -1279,8 +1276,7 @@ ggplot(aes(gdpPercap, lifeExp, fill = continent)) +
   scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
   facet_grid(year~continent)  +  # <3>
   scale_x_log10(labels = scales::comma_format(scale = 1)) +
-  theme(axis.text.x = element_text(angle = 45, hjust=1))+
-  guides()
+  theme(axis.text.x = element_text(angle = 45, hjust=1))
 
 ```
 
@@ -1407,12 +1403,12 @@ st_as_sf()
 ```{r, eval=T, include=T}
 #| classes: shrink-code
 
-
 ggplot() +
   geom_sf(data=world, fill="white")+
   geom_sf(data=gap_world %>% filter(year == 1952), 
           aes(fill=lifeExp))+
-  scale_fill_viridis(option="magma", na.value = "white") 
+  scale_fill_viridis(option="magma", na.value = "white") +
+  labs(title = "Life expectancy 1952")
 
 ```
 
@@ -1424,7 +1420,8 @@ ggplot() +
   geom_sf(data=world, fill="white")+
   geom_sf(data=gap_world %>% filter(year == 2007), 
           aes(fill=lifeExp))+
-  scale_fill_viridis(option="magma", na.value = "white") 
+  scale_fill_viridis(option="magma", na.value = "white") +
+  labs(title = "Life expectancy 2007")
 ```
 
 ## Vi kan också ändra projektionen
