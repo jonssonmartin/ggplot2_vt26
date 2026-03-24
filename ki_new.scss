@@ -76,4 +76,57 @@ $presentation-heading-color: #4F0433 !default;
   width: 40% !important;
 }
 
+// ändrar dynamisk bredd?
 
+/* --- outer shrink wrapper --- */
+.reveal .shrink-code {
+  width: fit-content !important;
+  max-width: 100% !important;
+}
+
+/* --- make the code container shrink to content --- */
+.reveal .shrink-code .cell,
+.reveal .shrink-code .cell-code,
+.reveal .shrink-code .code-with-copy,
+.reveal .shrink-code div.sourceCode {
+  display: inline-block !important;
+  width: fit-content !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0.2em 0.6em !important;   /* put padding here instead */
+  box-sizing: border-box !important;
+}
+
+/* --- inner pre/code should not add extra width --- */
+.reveal .shrink-code pre,
+.reveal .shrink-code pre.sourceCode {
+  display: inline-block !important;
+  width: auto !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* --- preserve code line layout --- */
+.reveal .shrink-code pre code {
+  white-space: pre !important;
+}
+
+// Align figurer
+
+.reveal figure,
+.reveal .figure,
+.reveal .quarto-figure {
+  text-align: left !important;
+}
+
+.reveal figure img,
+.reveal .figure img,
+.reveal .quarto-figure img {
+  display: block;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}

@@ -16,6 +16,7 @@ format:
     code-line-numbers: false
     slide-number: c/t
     show-slide-number: all
+    code-annotations: hover
 editor: visual
 warning: false
 echo: true
@@ -176,7 +177,7 @@ Många av exemplen i presentationen börjar med en enkel graf och blir successiv
 
 # ggplot2 basics
 
-We will create a basic plot just to quickly get a understanding of the most commonly used arguments and functions
+Vi kommer skapa några enkla plottar för att få en förståelse hur komponenterna används
 
 ```{r, include=FALSE}
 library(ggplot2)
@@ -205,23 +206,21 @@ head(gapminder)
 ```{r}
 #| fig-width: 6
 #| fig-height: 4
+#| classes: shrink-code
 
 #Ladda paketet
 library(ggplot2) 
 
-ggplot(
-       # Först specificera vilken data
-       data = gapminder, 
-       # Allt som anges inom aes() ska komma från datan
-       # I detta fall ska färgen baseras på "continent" och storleken på "pop"
-       mapping = aes(x=continent, 
-                     y=gdpPercap, 
-                     color=continent,
-                     size=pop)) + 
-  # position = "jitter" används så att punkterna in överlappar
-  geom_point(position = "jitter") 
+ggplot(data = gapminder, # <1>
+       mapping = aes(x=continent, y=gdpPercap, # <2>
+                     color=continent)) + # <2>
+  geom_boxplot() # <3>
 
 ```
+
+1.  Först specificeras vilken data som ska användas
+2.  Allt som anges inom `aes()` ska komma från datafilen. I detta fall blir punkterna färgade av `continent`
+3.  `geom_boxplot()` definierar hur plotten ser ut
 
 ## Samma plot, olika sätt att koda
 
@@ -229,58 +228,59 @@ Nästan allt i R kan göras på olika sätt.
 
 Det är oftast en fråga om tycke och smak
 
-## Exampel 1: Global färg, global estetik
+## Exempel 1: Global färg, global estetik
 
 Alla "geoms" använder sig av data specificerat inom `ggplot()`
 
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
+#| classes: shrink-code
 
-ggplot(data = gapminder, 
-       mapping = aes(x=continent, 
-                     y=gdpPercap, 
-                     color=continent,
-                     size=pop)) + 
-  geom_point(position = "jitter") 
+ggplot(data = gapminder, # <1>
+       mapping = aes(x=continent, y=gdpPercap, 
+                     color=continent)) + 
+  geom_boxplot()
 ```
+
+1.  Allting specificeras inom `ggplot()`
 
 ## Exampel 2, Lokal data, lokal estetik
 
 Allt anges inom funktionen `geom_point()`
 
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
+#| classes: shrink-code
 
-ggplot() + 
-  geom_point(data = gapminder, 
-       mapping = aes(x=continent, 
-                     y=gdpPercap, 
-                     color=continent,
-                     size=pop),
-       position = "jitter") 
+ggplot() + # <1>
+  geom_boxplot(data = gapminder, # <2>
+       mapping = aes(x=continent, y=gdpPercap, # <2>
+                     color=continent)) # <2>
 ```
+
+1.  Inget specificeras inne i `ggplot()`
+2.  Både `data=` och `aes()` specificeras i `geom_point()`
 
 ## Exampel 3 Tidyverse
 
 Specificera data och sedan plotta
 
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
+#| classes: shrink-code
 
-gapminder %>% 
-ggplot() + 
-  geom_point(mapping = aes(x=continent, 
-                           y=gdpPercap, 
-                           color=continent,
-                           size=pop),
-             position = "jitter") 
+gapminder %>% # <1>
+ggplot() + # <2>
+  geom_boxplot(mapping = aes(x=continent, y=gdpPercap, # <3>
+                           color=continent)) # <3>
 ```
+
+1.  Datafilen specificeras först "and then"
+2.  Ingenting skrivs i `ggplot()`
+3.  Allt specificeras inom `geom_point()` och `aes()`
 
 ## Nu kan du använda ggplot2
 
@@ -293,48 +293,53 @@ I stort sett samma kod kan producera olika plottar. Det enda som ändras är `ge
 ## boxplot
 
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
-#| code-line-numbers: "5|1-5"
-ggplot(data = gapminder, 
-       mapping = aes(x=continent, 
-                     y=gdpPercap, 
-                     color=continent)) + 
-  geom_boxplot() 
+#| classes: shrink-code
+ggplot(data = gapminder, # <1>
+       mapping = aes(x=continent, # <1>
+                     y=gdpPercap, # <1>
+                     color=continent)) + # <1>
+  geom_boxplot() # <2>
 
 ```
+
+1.  Alla specifikationer är specificerade i `ggplot()` och `aes()`
+2.  Skapar boxplot genom att specificera `geom_boxplot()`
 
 ## Bar plot `(geom_col`)
 
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
-#| code-line-numbers: "5|1-5"
+#| classes: shrink-code
+#| 
 ggplot(data = gapminder, 
        mapping = aes(x=continent, 
                      y=gdpPercap, 
                      fill=continent)) + 
-  geom_col() 
+  geom_col() # <1>
 
 ```
+
+1.  `geom_col()` skapar ett stapeldiagram
 
 ## Violin plot
 
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
-#| code-line-numbers: "5|1-5"
+#| classes: shrink-code
 ggplot(data = gapminder, 
        mapping = aes(x=continent, 
                      y=gdpPercap, 
                      color=continent)) + 
-  geom_violin() 
+  geom_violin() # <1>
 
 
 ```
+
+1.  `geom_violin()` skapar en violin plot
 
 ## Kontinuerliga variabler
 
@@ -343,30 +348,34 @@ Fler alternativ blir tillgängliga om vi ändrar x-axeln till en kontinuerlig va
 ## Density plot
 
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
-#| code-line-numbers: "4|1-5"
+#| classes: shrink-code
 ggplot(data = gapminder, 
        mapping = aes(x=lifeExp, 
                      fill=continent)) + 
-  geom_density(alpha=0.5) 
+  geom_density(alpha=0.5) # <1>
 ```
+
+1.  `geom_density()` skapar en density plot. `alpha=0.5` påverkar genomskinligheten
 
 ## Histogram
 
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
-#| code-line-numbers: "4-6|1-6"
+#| classes: shrink-code
 ggplot(data = gapminder, 
        mapping = aes(x=lifeExp, 
                      fill=continent)) + 
-  geom_histogram(alpha=0.5, 
-                 binwidth = 1, 
-                 color="black") 
+  geom_histogram(alpha=0.5, # <1>
+                 binwidth = 1, # <2>
+                 color="black") # <3>
 ```
+
+1.  Genomskinlighet specificeras genom `alpha`,
+2.  `binwidth` specificerar (bredd på staplarna)
+3.  `color` specificerar färgen på linjerna
 
 ## Två kontinuerliga variabler
 
@@ -375,46 +384,51 @@ ggplot(data = gapminder,
 Här måste vi specificera en till variabel
 
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
-#| code-line-numbers: "3|6|1-9"
+#| classes: shrink-code
+
 ggplot(data = gapminder, 
        mapping = aes(x=gdpPercap, 
-                     y=lifeExp, 
+                     y=lifeExp, # <1>
                      color=continent,
                      size=pop)) + 
-  geom_point() 
+  geom_point() # <2>
 ```
+
+1.  Lägg till lifeExp som `y` variabel. Annars hamnar alla på en linje
+2.  `geom_point()` plottar ut punkterna
 
 ## Line plot
 
 ändra `geom`
 
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
-#| code-line-numbers: "5|1-5"
+#| classes: shrink-code
 ggplot(data = gapminder, 
        mapping = aes(x=year, 
                      y=lifeExp, 
                      color=continent)) + 
-  geom_path() 
+  geom_path() # <1>
 ```
+
+1.  `geom_path()` skapar linjen. geom_path är likt `geom_line()` men skiljer sig på hur data sorteras
 
 ## Heatmap
 
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
-#| code-line-numbers: "4|1-5"
+#| classes: shrink-code
 ggplot(data = gapminder, 
        mapping=aes(x = gdpPercap, 
                    y = lifeExp)) +
-  geom_bin2d(bins = 60)
+  geom_bin2d(bins = 60) # <1>
 ```
+
+1.  En heatmap skapas genom funktionen `geom_bin2d()`. `bins` specificerar hur stora rutorna är
 
 ## Vanliga misstag vid färganvändande
 
@@ -423,47 +437,49 @@ Om färgerna ska baseras på värden från datan ska variabeln anges inom `aes(
 Så här:
 
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
-#| code-line-numbers: "6|1-6"
+#| classes: shrink-code
+ggplot(data = gapminder, 
+       mapping = aes(x=continent,
+                     y=gdpPercap,
+                     size=pop)) +
+  geom_point(position = "jitter", 
+             aes(color=continent)) # <1>
+```
+
+1.  Om färg ska komma från en variabel i data så måste det specificeras inom `aes()`
+
+## Om det anges utanför `aes()` kommer ggplot inte att förstå vad det betyder.
+
+```{r, error=TRUE}
+#| fig-width: 6
+#| fig-height: 4
+#| classes: shrink-code
 ggplot(data = gapminder, 
        mapping = aes(x=continent, 
                      y=gdpPercap,
                      size=pop)) + 
   geom_point(position = "jitter", 
-             aes(color=continent)) 
+             color=continent) # <1>
 ```
 
-## Om det anges utanför `aes()` kommer ggplot inte att förstå vad det betyder.
-
-```{r, error=TRUE}
-#| output-location: column
-#| fig-width: 6
-#| fig-height: 4
-ggplot(
-       data = gapminder, 
-       mapping = aes(x=continent, 
-                     y=gdpPercap,
-                     size=pop)) + 
-  geom_point(position = "jitter", 
-             color=continent) 
-```
+1.  Notera att ggplot2 inte förstår vad "continent" är om det ligger utanför `aes()`
 
 ## Om det anges utanför `aes()` behöver du ange vilken färg som ska användas.
 
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
-#| code-line-numbers: "7|1-7"
-ggplot(
-       data = gapminder, 
+#| classes: shrink-code
+ggplot(data = gapminder, 
        mapping = aes(x=continent, 
                      y=gdpPercap,
                      size=pop)) + 
-  geom_point(position = "jitter", color="red") 
+  geom_point(position = "jitter", color="red") # <1>
 ```
+
+1.  Du kan specificera färg utanför `aes()` men då måste det vara en känd färg/hexkod. Alla punkter kommer få samma färg
 
 ## En kommentar angående teman (themes)
 
@@ -540,7 +556,7 @@ ggplot(data=gapminder, aes(x=continent,
 )
 ```
 
-## Du kan skapa ditt eget theme
+## Du kan skapa ditt eget "theme"
 
 ```{r}
 
@@ -578,10 +594,9 @@ my_theme <- function() { theme_bw() +
 Efter att temat har definierats kan du antingen skriva koden så här:
 
 ```{r}
-#| output-location: column
 #| fig-width: 12
 #| fig-height: 8
-#| code-line-numbers: "9|1-9"
+#| classes: shrink-code
 ggplot(data=gapminder,
        aes(x=continent, 
            y=gdpPercap, 
@@ -590,8 +605,10 @@ ggplot(data=gapminder,
   labs(title="Plot with theme settings",
        subtitle = "subtitle to plot",
        caption = "caption to plot")+
-  my_theme()
+  my_theme() # <1>
 ```
+
+1.  Temat kan specificeras genom att skriva in namnet `my_theme()`
 
 ## Sätt tema för alla framtida grafer
 
@@ -600,23 +617,24 @@ Det är möjligt att ange ett standardtema
 Detta används automatiskt som ny default om inget annat specificeras
 
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
-## Sets the theme as default
-theme_set(my_theme())
+#| classes: shrink-code
+theme_set(my_theme()) # <1>
 
 ggplot(data=gapminder,
-       aes(x=continent, 
-           y=gdpPercap, 
+       aes(x=continent, y=gdpPercap, 
            color=continent)) +
   geom_point(alpha=0)+
   labs(title="Plot with theme settings",
        subtitle = "subtitle to plot",
-       caption = "caption to plot")
+       caption = "caption to plot") # <2>
 
 
 ```
+
+1.  Koden `theme_set()` används för att använda vårat eget theme som default. Vad om vi vill gå tillbaka till default så kan vi skriva `theme_set(theme_gray())`
+2.  Notera att figuren inte använder sig av default trots att inget "theme" är specificerat
 
 ## Installera och ladda paket
 
@@ -638,9 +656,9 @@ if (!require('gapminder')) install.packages('gapminder'); library('gapminder')
 -   Det finns förbättringspotential
 
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
+#| classes: shrink-code
 library(tidyverse)
 library(gapminder)
 data("gapminder")
@@ -668,17 +686,16 @@ ggplot2 har två olika färgargument:
 3.  Ta bort outliers.
 
 ```{r, echo=T, eval=T}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
-#| code-line-numbers: "4|7-9|6|1-20"
+#| classes: shrink-code
 gapminder %>% 
   ggplot(aes(x=continent, 
              y=gdpPercap, 
-             fill=continent,
+             fill=continent, # <1>
              shape=continent))+
-  geom_boxplot(outliers=F)+
-  scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
+  geom_boxplot(outliers=F)+ # <3>
+  scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+ # <2>
   labs(x="Continent",
        y="GDP per capita",
        title = "GDP per capita",
@@ -686,30 +703,30 @@ gapminder %>%
        caption = "") 
 ```
 
+1.  Ändra från `color` till `fill`
+2.  Specificera färgerna genom att lägga till `scale_fill_manual()`
+3.  Ta bort outliers
+
 ## Ytterligare ändringar
 
-1.  Ändra transparans
-2.  Flera lager kan läggas till i samma graf
-
 ```{r}
-#| output-location: column
 #| fig-width: 6
 #| fig-height: 4
-#| code-line-numbers: "5-11|16-18|1-30"
+#| classes: shrink-code
 gapminder %>% 
   ggplot(aes(x=continent, 
              y=gdpPercap, 
              fill=continent))+
-  geom_point(aes(color=continent), 
+  geom_point(aes(color=continent), # <1>
              position = 
              position_jitterdodge(
                  jitter.width = 1, 
                  dodge.width = 0.8), 
-             alpha=0.5, 
+             alpha=0.5, # <2>
              size=0.5)+
   geom_boxplot(outliers=F, alpha=0.5)+
   scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
-  scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
+  scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+ # <3>
   labs(x="Continent",
        y="GDP per capita",
        title = "GDP per capita",
@@ -717,6 +734,10 @@ gapminder %>%
        caption = "") +
   coord_cartesian(ylim = c(0,50000))
 ```
+
+1.  Flera lager kan läggas till. Här läggs punkter till genom `geom_point()`
+2.  Ändra transparans på punkterna genom att ändra `alpha=`
+3.  Lägg till `scale_color_manual()` för samma färg på punkter och boxplots
 
 # Visualisera sambandet mellan två kontinuerliga variabler
 
@@ -729,6 +750,7 @@ gapminder %>%
 -   Vi använder samma dataset som tidigare
 
 ```{r, echo=TRUE, eval=T}
+#| classes: shrink-code
 if (!require('gapminder')) install.packages('gapminder'); library('gapminder')
 
 ```
@@ -742,6 +764,7 @@ if (!require('gapminder')) install.packages('gapminder'); library('gapminder')
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
+#| classes: shrink-code
 gapminder %>% 
   ggplot(aes(x=gdpPercap, y=lifeExp)) +
   geom_point()
@@ -753,81 +776,101 @@ gapminder %>%
 
 -   `fill`
 
--   `size` (Populationen avgör storleken)
+-   `size`
 
 ```{r}
 #| fig-width: 12
 #| fig-height: 8
+#| classes: shrink-code
 gapminder %>% 
-  ggplot(aes(x=gdpPercap, y=lifeExp, color=continent, fill=continent, size=pop))+
+  ggplot(aes(x=gdpPercap, y=lifeExp, 
+             color=continent, # <1>
+             fill=continent,  # <2>
+             size=pop))+  # <3>
   geom_point(alpha=0.5)
 ```
 
-## Vi vill ändra färgerna
+1.  Specificera färg genom `color=` och välj continent som variabel
+2.  Gör samma sak med `fill=`
+3.  Ändra storlek på punkterna genom att specificera `size=`
+
+## Ändra färgerna
 
 -   Som förut specificerar vi färg genom: `scale_color_manual()`
 
 ```{r}
-#| output-location: slide
 #| fig-width: 12
 #| fig-height: 8
-#| code-line-numbers: "4-5"
+#| classes: shrink-code
 gapminder %>% 
-  ggplot(aes(x=gdpPercap, y=lifeExp, color=continent, fill=continent, size=pop)) + 
-  geom_point(alpha=0.5) +
-  scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
-  scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))
+  ggplot(aes(x=gdpPercap, y=lifeExp, 
+             color=continent, 
+             fill=continent, 
+             size=pop)) + 
+  geom_point(alpha=0.5) + # <1>
+  scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b")) # <2>
 ```
+
+1.  `alpha=` påverkar genomskinligheten
+2.  scale_color_manual() ändrar färgen på punkterna
 
 ## Lägg till regressionslinje
 
 -   Vi kan lägga till regressionlinjen genom att använda: `geom_smooth()`
 
--   Vi byter labels och lägger till en titel i funktionen `labs()`
-
 ```{r, warning=FALSE}
-#| output-location: slide
 #| fig-width: 12
 #| fig-height: 8
-#| code-line-numbers: "6-10"
+#| classes: shrink-code
 gapminder %>% 
-  ggplot(aes(x=gdpPercap, y=lifeExp, color=continent, fill=continent, size=pop)) + 
+  ggplot(aes(x=gdpPercap, 
+             y=lifeExp, 
+             color=continent, 
+             fill=continent, 
+             size=pop)) + 
   geom_point(alpha=0.5) +
   scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
-  scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
-  geom_smooth(method = "lm", se = T, linewidth=0.5)
+  geom_smooth(method = "lm", se = T, linewidth=0.5) # <1>
 
 ```
+
+1.  `geom_smooth()` lägger till regressionslinje. "lm" specificerar linjär modell
 
 ## Ändra legend
 
 Vi kan ta bort "pop"-legenden genom att ange: `guides(size="none")`
 
+Vi ändrar även färgerna så linjerna matchar punkterna
+
 ```{r, warning=FALSE}
-#| output-location: slide
 #| fig-width: 12
 #| fig-height: 8
-#| code-line-numbers: "9"
+#| classes: shrink-code
+
 gapminder %>% 
-  ggplot(aes(x=gdpPercap, y=lifeExp, color=continent, fill=continent, size=pop)) + 
+  ggplot(aes(x=gdpPercap, 
+             y=lifeExp, 
+             color=continent, 
+             fill=continent, 
+             size=pop)) + 
   geom_point(alpha=0.5) +
-  scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"), 
-                     name="Continent")+
-  scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"), 
-                     name="Continent")+
+  scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"), name="Continent")+ # <1>
+  scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"), name="Continent")+ 
   geom_smooth(method = "lm", se = T, linewidth=0.5)+
-  guides(size="none")
+  guides(size="none") # <2>
 ```
+
+1.  Vi måste specificera `scale_color_manual()` så linjerna får samma färg som punkterna
+2.  Detta tar bort delen av legend som specificerar storlek
 
 ## Lägg till titel, undertitel och ändra legendens titel
 
 Allt kan anges i `labs()` argumentet
 
 ```{r, warning=FALSE}
-#| output-location: slide
 #| fig-width: 12
 #| fig-height: 8
-#| code-line-numbers: "8-12"
+#| classes: shrink-code
 gapminder %>% 
   ggplot(aes(x=gdpPercap, y=lifeExp, color=continent, fill=continent, size=pop)) + 
   geom_point(alpha=0.5) +
@@ -835,22 +878,27 @@ gapminder %>%
   scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
   geom_smooth(method = "lm", se = T, linewidth=0.5, )+
   guides(size="none")+
-  labs(x="GDP per capita",
-       y="Life expectancy",
-       title = "Relationship between GDP and life expecntacy",
-       subtitle = "Source: gapminder data",
-       color= "Continent", fill="Continent")
+  labs(x="GDP per capita", # <1>
+       y="Life expectancy",# <2>
+       title = "Relationship between GDP and life expecntacy",# <3>
+       subtitle = "Source: gapminder data",# <4>
+       color= "Continent", fill="Continent")# <5>
 ```
+
+1.  x-axel
+2.  y-axel
+3.  titel
+4.  sub-titel
+5.  legend
 
 ## Skapa "subfigurer" per kontinent
 
 -   För att dela upp grafen efter kontinent kan vi använda `facet_wrap()`
 
 ```{r, warning=FALSE}
-#| output-location: slide
 #| fig-width: 12
 #| fig-height: 8
-#| code-line-numbers: "13"
+#| classes: shrink-code
 gapminder %>% 
   ggplot(aes(x=gdpPercap, y=lifeExp, color=continent, fill=continent, size=pop)) + 
   geom_point(alpha=0.5) +
@@ -863,20 +911,21 @@ gapminder %>%
        title = "Relationship between GDP and life expecntacy",
        subtitle = "Source: gapminder data",
        color= "Continent", fill="Continent")+
-  facet_wrap(~ continent) 
+  facet_wrap(~ continent) # <1>
 ```
+
+1.  Denna rad kod splittar upp figuren till en figur per kontinent
 
 ## Lite bättre men inte optimalt
 
 -   Vi får mer utrymme om vi tar bort legenden.
 
--   Samtidigt ändrar jag bakgrundsfärgen för facets.
+-   Samtidigt ändrar vi bakgrundsfärgen för facets.
 
 ```{r, warning=FALSE}
-#| output-location: slide
 #| fig-width: 12
 #| fig-height: 8
-#| code-line-numbers: "14-16"
+#| classes: shrink-code
 gapminder %>% 
   ggplot(aes(x=gdpPercap, y=lifeExp, color=continent, fill=continent, size=pop)) + 
   geom_point(alpha=0.5) +
@@ -890,21 +939,24 @@ gapminder %>%
        subtitle = "Source: gapminder data",
        color= "Continent", fill="Continent")+
   facet_wrap(~ continent) +
-  theme(legend.position = "none",
-        strip.text.x = element_text(color=c("black")),
-        strip.background = element_rect(fill=c("white")))
+  theme(legend.position = "none", # <1> 
+        strip.text.x = element_text(color=c("black")), # <2>
+        strip.background = element_rect(fill=c("grey97"))) # <3>
 
 ```
+
+1.  Hela legend tas bort genom `legend.position = "none"`
+2.  Färgen på texten ändras genom `strip.text.x`
+3.  Bakgrundsfärgen ändras genom `strip.background`
 
 ## Konvertera x-axeln
 
 -   Vi ändrar x-axeln till logaritmisk skala med `scale_x_log10()`
 
 ```{r, warning=FALSE}
-#| output-location: slide
 #| fig-width: 12
 #| fig-height: 8
-#| code-line-numbers: "17"
+#| classes: shrink-code
 gapminder %>% 
   ggplot(aes(x=gdpPercap, y=lifeExp, color=continent, fill=continent, size=pop)) + 
   geom_point(alpha=0.5) +
@@ -921,8 +973,10 @@ gapminder %>%
   theme(legend.position = "none",
         strip.text.x = element_text(color=c("black")),
         strip.background = element_rect(fill=c("white")))+
-  scale_x_log10(labels = scales::comma_format(scale = 1))
+  scale_x_log10(labels = scales::comma_format(scale = 1)) # <1>
 ```
+
+1.  `scale_x_log10` ändrar skalan på x-axeln. Lägger till comma genom `scales::comma_format()`
 
 # ggplot2 tilläggspaket
 
@@ -938,25 +992,18 @@ Ett paket som kan vara användbart för presentationer är paketet `gganimate`
 
 ## Lets revisit the last plot
 
-<div>
-
--   För att animera behöver vi ladda/installera paketet gganimate.
-
--   Vi tar bort regressionslinjen genom att ta bort `geom_smooth()` och ökar punktstorleken med `scale_size_continuous()`
-
--   Vi lägger till år i `transition_time()` och ändrar undertiteln med `labs(subtitle = "Year: {frame_time}")`
-
-</div>
+Installera gganimate, ta bort regressionslinjen (`geom_smooth()`), öka punktstorleken genom `scale_size_continuous()`
 
 <div>
 
 ```{r, echo=T, eval=F, error=TRUE, print=F}
 #| fig-width: 12
 #| fig-height: 8
-#| code-line-numbers: "1|11|16|19"
-if (!require('gganimate')) install.packages('gganimate'); library('gganimate')
+#| classes: shrink-code
 
-animation <- gapminder %>% 
+if (!require('gganimate')) install.packages('gganimate'); library('gganimate') # <1>
+
+animation <- gapminder %>% # <2>
   ggplot(aes(x=gdpPercap, y=lifeExp, color=continent, fill=continent, size=pop)) + 
   geom_point(alpha=0.5) +
   scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
@@ -964,18 +1011,24 @@ animation <- gapminder %>%
   guides(size="none")+
   labs(x="GDP per capita",y="Life expectancy",
        title = "Relationship between GDP and life expecntacy",
-       color= "Continent", fill="Continent", subtitle = "Year: {frame_time}")+
+       color= "Continent", fill="Continent", subtitle = "Year: {frame_time}")+ # <3>
   facet_wrap(~ continent) +
-  theme(legend.position = "none", strip.text.x = element_text(color=c("black")), 
+  theme(legend.position = "none", 
+        strip.text.x = element_text(color=c("black")), 
         strip.background = element_rect(fill=c("white")))+
   scale_x_log10(labels = scales::comma_format(scale = 1)) + 
-  transition_time(year) +
-  scale_size_continuous(range=c(3,15))
+  transition_time(year) + # <4> 
+  scale_size_continuous(range=c(3,15)) 
 
-animate(animation, height = 900, width =1200, units="px", res=200,
-        renderer = file_renderer(dir = "frames", prefix = "gganim", overwrite = TRUE))
+animate(animation, height = 900, width =1200, units="px", res=200) # <5>
 
 ```
+
+1.  Ladda/installera gganimate
+2.  Spara figuren som en animation
+3.  Lägg till år som sub-title
+4.  `transition_time()` skapar själva animationen
+5.  Detta steg gör animationen synlig i "Viewer"
 
 </div>
 
@@ -992,34 +1045,39 @@ Ibland har vi mycket data och det kan vara svårt att särskilja datapunkterna.
 I det här exemplet använder vi återigen gapminder-data och tar fram en lista över länder av intresse.
 
 ```{r, echo=TRUE}
-if (!require('gghighlight')) install.packages('gghighlight'); library('gghighlight')
+#| classes: shrink-code
+if (!require('gghighlight')) install.packages('gghighlight'); library('gghighlight') # <1>
 
-## Calculate mean life expectancy and countries to highlight
+
 gapminder <- gapminder %>% 
   group_by(country) %>% 
-  mutate(mean_life = mean(lifeExp),
-         highlighted_countries = case_when(country=="Italy" ~ 1, 
-                                           country=="Australia" ~ 1,
-                                           country=="United States" ~ 1,
-                                           country=="Chile" ~ 1,
-                                           country=="Sweden" ~ 1,
-                                           country=="Venezuela" ~ 1,
-                                           country=="Rwanda" ~ 1,
-                                           country=="China" ~ 1,
-                                           country=="Afghanistan" ~ 1,
-                                           country=="South Africa" ~ 1,
-                                           country=="Cambodia" ~ 1,
-                                           country=="Turkey" ~ 1,
-                                           country=="Reunion" ~ 1)) %>% ungroup()
+  mutate(mean_life = mean(lifeExp), # <2>
+         highlighted_countries = case_when(country=="Italy" ~ 1, # <2>
+                                           country=="Australia" ~ 1,# <2>
+                                           country=="United States" ~ 1,# <2>
+                                           country=="Chile" ~ 1,# <2>
+                                           country=="Sweden" ~ 1,# <2>
+                                           country=="Venezuela" ~ 1,# <2>
+                                           country=="Rwanda" ~ 1,# <2>
+                                           country=="China" ~ 1,# <2>
+                                           country=="Afghanistan" ~ 1,# <2>
+                                           country=="South Africa" ~ 1,# <2>
+                                           country=="Cambodia" ~ 1,# <2>
+                                           country=="Turkey" ~ 1,# <2>
+                                           country=="Reunion" ~ 1, # <2>
+                                           .default = 0)) %>% ungroup()
 
-gapminder$highlighted_countries[is.na(gapminder$highlighted_countries)] <- 0
 
 
 ```
 
+1.  Installera `gghighlight`
+2.  Räkna ut variabler. Specificera vilka länder som ska vara "highlighted"
+
 ## Första steget är att plotta ut data
 
 ```{r}
+#| classes: shrink-code
 gapminder %>% 
   ggplot(aes(x=year, 
              y=lifeExp, 
@@ -1031,30 +1089,34 @@ gapminder %>%
 
 Vi kan enkelt färgsätta linjerna genom att lägga till `color=`
 
-Vi färgsätter dem efter kontinent (continent).
-
 ```{r}
+#| classes: shrink-code
 gapminder %>% 
   ggplot(aes(x=year, 
              y=lifeExp, 
              group=country, 
-             color=continent)) +
+             color=continent)) + # <1>
   geom_line()
 ```
+
+1.  Färgsätt länderna genom att specificera `color=`
 
 ## Ändra färgerna
 
 Vi specificerar färgerna genom `scale_color_manual()`
 
 ```{r}
+#| classes: shrink-code
 gapminder %>% 
   ggplot() + 
   geom_line(aes(x=year, 
                 y=lifeExp, 
                 group=country, 
                 color=continent)) + 
-  scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))
+  scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b")) # <1>
 ```
+
+1.  `scale_color_manual()` bestämmer färgerna
 
 ## Det ser inte så bra ut...
 
@@ -1065,14 +1127,18 @@ Vi använder vår beräknade variabel "highlighted_countries"
 Här behöver vi ladda ett nytt paket som heter `gghighlight`
 
 ```{r}
-if (!require('gghighlight')) install.packages('gghighlight'); library('gghighlight')
+#| classes: shrink-code
+if (!require('gghighlight')) install.packages('gghighlight'); library('gghighlight') # <1>
 
 gapminder %>% 
   ggplot() + 
   geom_line(aes(x=year, y=lifeExp, group=country, color=continent)) + 
   scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b")) +
-  gghighlight(highlighted_countries==1)
+  gghighlight(highlighted_countries==1) # <2>
 ```
+
+1.  Ladda gghighlight
+2.  Highlighta länder av intresse. Vi använder oss av variabeln vi tidigare räknade ut. För detta behövs paketet `gghighlight`
 
 ## Använd "facets" för ökad läsbarhet
 
@@ -1081,17 +1147,19 @@ Det är fortfarande många linjer
 Vi kan öka läsbarheten genom att specificera `facet_wrap()` på samma sätta som vid animationen
 
 ```{r}
-#| output-location: slide
 #| fig-width: 12
 #| fig-height: 8
+#| classes: shrink-code
 gapminder %>% 
   ggplot() + 
   geom_line(aes(x=year, y=lifeExp, group=country, color=continent)) + 
   scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b")) +
   gghighlight(highlighted_countries==1) + 
-  facet_wrap(~ continent)
+  facet_wrap(~ continent) #<1>
   
 ```
+
+1.  Dela in i subplottar genom att använda `facet_wrap()`
 
 ## Ändra `gghighlight()` parametrar
 
@@ -1100,23 +1168,27 @@ Alla länder finns i "facets".
 Det kan vi ändra genom att lägga till lite information i funktionen `gghighlight()`
 
 ```{r, warning=FALSE}
-#| output-location: slide
 #| fig-width: 12
 #| fig-height: 8
+#| classes: shrink-code
 
 gapminder %>% 
   ggplot() + 
   geom_line(aes(x=year, y=lifeExp, group=country, color=continent)) + 
   scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+ 
   gghighlight(highlighted_countries==1, 
-              calculate_per_facet = TRUE, 
-              label_params = list(size=3),
-              unhighlighted_params = list(linewidth = 0.3,
-                                          colour = alpha("grey", 0.7),
-                                          linetype = "dashed"))+
+              calculate_per_facet = TRUE, # <1>
+              label_params = list(size=3), # <2>
+              unhighlighted_params = list(linewidth = 0.3, # <3>
+                                          colour = alpha("grey", 0.7),# <3>
+                                          linetype = "dashed"))+ # <3>
   facet_wrap(~ continent)
 
 ```
+
+1.  Tar bort alla linjer från alla subplottar
+2.  Ändrar textstorleken på labels
+3.  Ändrar storlek, genomskinlighet samt gör linjerna streckade för de observationen som inte är highlightade
 
 ## Ändra några detaljer genom att använda `theme()`
 
@@ -1125,10 +1197,9 @@ Som vi gjorde tidigare kan vi ta bort den grå färgen och ändra storlek och vi
 Allt detta specificeras i theme()
 
 ```{r, warning=FALSE}
-#| output-location: slide
 #| fig-width: 12
 #| fig-height: 8
-#| code-line-numbers: "12-15"
+#| classes: shrink-code
 gapminder %>% 
   ggplot() + 
   geom_line(aes(x=year, y=lifeExp, group=country, color=continent)) + 
@@ -1140,10 +1211,13 @@ gapminder %>%
                                           colour = alpha("grey", 0.7),
                                           linetype = "dashed"))+
   facet_wrap(~ continent)+
-  theme(strip.text.x = element_text(color=c("black")), 
-        strip.background = element_rect(fill=c("white")),
+  theme(strip.text.x = element_text(color=c("black")), # <1>
+        strip.background = element_rect(fill=c("wheat1")), # <2>
         axis.text.x = element_text(size=8, angle=c(25)))
 ```
+
+1.  Ändrar färgen på texten
+2.  Ändrar färgen på bakgrunden (`strip.background`)
 
 ## Vi kan lägga till punkter till linjerna
 
@@ -1151,7 +1225,7 @@ gapminder %>%
 #| output-location: slide
 #| fig-width: 12
 #| fig-height: 8
-#| code-line-numbers: "12"
+#| classes: shrink-code
 gapminder %>% 
   ggplot() + 
   geom_line(aes(x=year, y=lifeExp, group=country, color=continent)) +
@@ -1163,12 +1237,14 @@ gapminder %>%
                                           colour = alpha("grey", 0.5),
                                           linetype = "dashed",
                                           size=NA))+
-  geom_point(aes(x=year, y=lifeExp, group=country, color=continent))+
+  geom_point(aes(x=year, y=lifeExp, group=country, color=continent))+ # <1>
   facet_wrap(~ continent)+ 
   theme(strip.text.x = element_text(color=c("black")), 
-        strip.background = element_rect(fill=c("white")),
+        strip.background = element_rect(fill=c("wheat1")),
         axis.text.x = element_text(size=8, angle=25))
 ```
+
+1.  Punkter adderas som ett nytt lager
 
 ## Interaktiva plottar
 
@@ -1176,12 +1252,12 @@ Med paketet `plotly` är det enkelt att göra interaktiva figurer
 
 ```{r}
 #| output-location: slide
-#| fig-width: 30
-#| fig-height: 20
-#| code-line-numbers: "1|23|1-23"
-if (!require('plotly')) install.packages('plotly'); library('plotly')
+#| fig-width: 15
+#| fig-height: 10
+#| classes: shrink-code
+if (!require('plotly')) install.packages('plotly'); library('plotly') # <1>
 
-p <- gapminder %>% 
+p <- gapminder %>%  # <2>
   ggplot() + 
   geom_line(aes(x=year, y=lifeExp, group=country, color=continent)) +
   scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
@@ -1201,10 +1277,14 @@ p <- gapminder %>%
 labs(x="Life expectancy",
     y="Year")
 
-ggplotly(p)
+ggplotly(p) # <3>
 ```
 
-# ggdensity
+1.  Ladda paketet `plotly`
+2.  Spara figuren som ett object
+3.  `ggplotly()` skapar en interaktiv figur
+
+## ggdensity
 
 Plotta "high density region" genom att använda funktionen `geom_hdr()`
 
@@ -1212,12 +1292,12 @@ Plotta "high density region" genom att använda funktionen `geom_hdr()`
 #| output-location: slide
 #| fig-width: 12
 #| fig-height: 8
-#| code-line-numbers: "5|1-18"
-if (!require('ggdensity')) install.packages('ggdensity'); library('ggdensity')
+#| classes: shrink-code
+if (!require('ggdensity')) install.packages('ggdensity'); library('ggdensity') # <1>
 
 gapminder %>% filter(year %in% c(1952, 2007)) %>% 
 ggplot(aes(gdpPercap, lifeExp, fill = continent)) +
-  ggdensity::geom_hdr() +
+  ggdensity::geom_hdr() + # <2>
   scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
   facet_grid(year~continent)  + 
   scale_x_log10(labels = scales::comma_format(scale = 1)) +
@@ -1226,19 +1306,32 @@ ggplot(aes(gdpPercap, lifeExp, fill = continent)) +
 
 ```
 
+1.  Ladda paketet `ggdensity`
+2.  funktionen `geom_hdr()` skapar high density regions
+
 ## Marginal plots
 
 "Marginal plots" kan skapas med paketet `ggExtra`
 
 ```{r}
-if (!require('ggExtra')) install.packages('ggExtra'); library('ggExtra')
+#| classes: shrink-code
+if (!require('ggExtra')) install.packages('ggExtra'); library('ggExtra') # <1>
 
-marginal_plot <- gapminder  |> filter(continent=="Europe" | continent=="Asia") |>  ggplot(aes(x = gdpPercap, y = lifeExp, color=continent)) +
-    geom_point()
+marginal_plot <- gapminder  |>  # <2>
+  filter(continent=="Europe" | continent=="Asia") |>  # <3>
+  ggplot(aes(x = gdpPercap, y = lifeExp, color=continent)) +
+    geom_point() +
+  scale_color_manual(values=c("#c32f27", "#82c0cc"))+
+  scale_fill_manual(values=c("#c32f27", "#82c0cc"))
 
-ggMarginal(marginal_plot, groupColour = T, groupFill =T)
+ggMarginal(marginal_plot, groupColour = T, groupFill =T) # <4>
 
 ```
+
+1.  Ladda paketet `ggextra`
+2.  Skapa ett object med plotten (scatter plot)
+3.  Filtrera ut Europea och Asien
+4.  Skapa en marginal plot genom att köra `ggMarginal()`
 
 ## Cirkeldiagram
 
@@ -1247,30 +1340,41 @@ Många ogillar cirkeldiagram av flera skäl. Det är en av de grundläggande geo
 Paketet `ggpie` kan användas om man vill göra ett circkeldiagram
 
 ```{r}
-if (!require('ggpie')) install.packages('ggpie'); library('ggpie')
+#| classes: shrink-code
+if (!require('ggpie')) install.packages('ggpie'); library('ggpie') # <1>
 
-gapminder %>% filter(year==2007) %>% 
-ggpie(group_key = "continent", count_type = "full", label_info = "all",
+gapminder %>% filter(year==2007) %>% # <2>
+ggpie(group_key = "continent", count_type = "full", label_info = "all", # <3>
           fill=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))
 ```
+
+1.  Ladda/installera paketet `ggpie`
+2.  Filtrera data på år 2007
+3.  Skapa cirkeldiagram genom funktionen `ggpie`
 
 ## "Donut charts"
 
 ```{r}
+#| classes: shrink-code
 gapminder %>% filter(year==2007) %>% 
-ggdonut(group_key = "continent", count_type = "full",label_type = "circle",
+ggdonut(group_key = "continent", count_type = "full",label_type = "circle", #<1>
         fill=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))
 ```
+
+1.  Samma som ggpie fast ggdonut
 
 ## "Rose charts"
 
 ```{r}
+#| classes: shrink-code
 
 gapminder %>% filter(year==2007) %>% 
-ggrosepie(group_key = "continent", count_type = "full", label_info = "all",
+ggrosepie(group_key = "continent", count_type = "full", label_info = "all", # <1>
           donut_frac=0.3,donut_label_size=3,
           fill=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))
 ```
+
+1.  För en "Rose plot" så specificeras `ggrosepie()`
 
 # sf package
 
@@ -1279,6 +1383,7 @@ ggrosepie(group_key = "continent", count_type = "full", label_info = "all",
 Paketet `sf` är utmärkt om man använder sig av geografisk data
 
 ```{r}
+#| classes: shrink-code
 if (!require('sf')) install.packages('sf'); library('sf')
 if (!require('rnaturalearth')) install.packages('rnaturalearth', dependencies = T); library('rnaturalearth')
 
@@ -1294,6 +1399,7 @@ Flera paket innehåller olika kartor
 Ett av dem är `rnaturalearth`
 
 ```{r}
+#| classes: shrink-code
 
 world <- ne_countries(type = "countries", scale = "medium", returnclass = "sf")
 
@@ -1305,6 +1411,7 @@ geom_sf(data=world)
 ## Om vi har ett kartlager så kan vi lägga till data
 
 ```{r, echo=F}
+#| classes: shrink-code
 
 world$sovereignt <- ifelse(world$sovereignt == "United States of America", "United States", world$sovereignt)
 
@@ -1318,6 +1425,7 @@ st_as_sf()
 ## Karta med gapminder data
 
 ```{r, eval=T, include=T}
+#| classes: shrink-code
 
 
 ggplot() +
@@ -1331,6 +1439,7 @@ ggplot() +
 ## Samma karta, annat år
 
 ```{r}
+#| classes: shrink-code
 ggplot() +
   geom_sf(data=world, fill="white")+
   geom_sf(data=gap_world %>% filter(year == 2007), 
@@ -1341,6 +1450,7 @@ ggplot() +
 ## Vi kan också ändra projektionen
 
 ```{r}
+#| classes: shrink-code
 ggplot() +
   geom_sf(data=world, fill="white")+
   geom_sf(data=gap_world %>% filter(year == 2007), 
@@ -1356,7 +1466,8 @@ ggplot() +
 Genom funktionen `ggsave()` som finns i ggplot2
 
 ```{r}
-#| code-line-numbers: "9-13|1-30"
+#| classes: shrink-code
+#| 
 map_plot <- ggplot() +
   geom_sf(data=world, fill="white")+
   geom_sf(data=gap_world %>% filter(!is.na(year)), 
@@ -1365,21 +1476,28 @@ map_plot <- ggplot() +
     coord_sf(crs = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs ") + facet_wrap(~year)
 
 
-ggsave("~/Downloads/map_plot.pdf", # path/to/folder
-      map_plot, # namn på figuren
-      height = 12, # höjd i tum (inches)
-      width = 12) # bredd i tum (inches)
+ggsave("~/Downloads/map_plot.pdf", # <1>
+      map_plot, # <2>
+      height = 12, # <3>
+      width = 12) # <4>
 
 ## SVG file
-ggsave("~/Downloads/map_plot.svg", # path/to/folder
-      map_plot, # namn på figuren
-      height = 12, # höjd i tum (inches)
-      width = 12) # bredd i tum (inches)
+ggsave("~/Downloads/map_plot.svg", # <5>
+      map_plot,
+      height = 12,
+      width = 12)
 
 ## PNG
-ggsave("~/Downloads/map_plot.png", # path/to/folder
-      map_plot, # namn på figuren
-      height = 12, # höjd i tum (inches)
-      width = 12) # bredd i tum (inches)
+ggsave("~/Downloads/map_plot.png", # <6>
+      map_plot, 
+      height = 12,
+      width = 12)
 
 ```
+
+1.  Specificera plats på datorn och filnamn
+2.  Namnet på ditt ggplot object. Kan skrivas som last_plot() om den senaste plotten ska användas
+3.  höjd i tum (inches)
+4.  bredd i tum (inches)
+5.  Om .svg format så specificera det i namnet
+6.  Samma för .png
