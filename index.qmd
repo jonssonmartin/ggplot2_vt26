@@ -31,6 +31,10 @@ highlight-style: gruvbox
 
 -   Du kan följa presentationen i R genom att kopiera koden för varje bild. För att göra det behöver du säkerställa att tidigare bilder har körts (dvs. att paketen är laddade och att data har importerats).
 
+## Presentationen finns online
+
+<https://jonssonmartin.github.io/ggplot2_vt26/>
+
 # Grammar of graphics
 
 ## Vad är "grammar of graphics" ?
@@ -598,9 +602,7 @@ Efter att temat har definierats kan du antingen skriva koden så här:
 #| fig-height: 8
 #| classes: shrink-code
 ggplot(data=gapminder,
-       aes(x=continent, 
-           y=gdpPercap, 
-           color=continent)) +
+       aes(x=continent, y=gdpPercap, color=continent)) +
   geom_point(alpha=0)+
   labs(title="Plot with theme settings",
        subtitle = "subtitle to plot",
@@ -612,9 +614,7 @@ ggplot(data=gapminder,
 
 ## Sätt tema för alla framtida grafer
 
-Det är möjligt att ange ett standardtema
-
-Detta används automatiskt som ny default om inget annat specificeras
+Det är möjligt att ange ett standardtema (blir nytt defaulttema)
 
 ```{r}
 #| fig-width: 6
@@ -623,8 +623,7 @@ Detta används automatiskt som ny default om inget annat specificeras
 theme_set(my_theme()) # <1>
 
 ggplot(data=gapminder,
-       aes(x=continent, y=gdpPercap, 
-           color=continent)) +
+       aes(x=continent, y=gdpPercap, color=continent)) +
   geom_point(alpha=0)+
   labs(title="Plot with theme settings",
        subtitle = "subtitle to plot",
@@ -653,8 +652,6 @@ if (!require('gapminder')) install.packages('gapminder'); library('gapminder')
 
 -   Låt oss gå tillbaka till vår boxplot
 
--   Det finns förbättringspotential
-
 ```{r}
 #| fig-width: 6
 #| fig-height: 4
@@ -664,8 +661,7 @@ library(gapminder)
 data("gapminder")
 
 ggplot(data = gapminder, 
-       mapping = aes(x=continent, 
-                     y=gdpPercap, 
+       mapping = aes(x=continent, y=gdpPercap, 
                      color=continent)) + 
   geom_boxplot() 
 
@@ -682,20 +678,17 @@ ggplot2 har två olika färgargument:
 ## Ändra färgerna i boxplot
 
 1.  Ändra från `color` till `fill`.
-2.  Ange vilka färger vi vill använda.
-3.  Ta bort outliers.
+2.  Ta bort outliers.
+3.  Ange vilka färger vi vill använda.
 
 ```{r, echo=T, eval=T}
 #| fig-width: 6
 #| fig-height: 4
 #| classes: shrink-code
 gapminder %>% 
-  ggplot(aes(x=continent, 
-             y=gdpPercap, 
-             fill=continent, # <1>
-             shape=continent))+
-  geom_boxplot(outliers=F)+ # <3>
-  scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+ # <2>
+  ggplot(aes(x=continent, y=gdpPercap, fill=continent))+ # <1>
+  geom_boxplot(outliers=F)+ # <2>
+  scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+ # <3>
   labs(x="Continent",
        y="GDP per capita",
        title = "GDP per capita",
@@ -714,24 +707,18 @@ gapminder %>%
 #| fig-height: 4
 #| classes: shrink-code
 gapminder %>% 
-  ggplot(aes(x=continent, 
-             y=gdpPercap, 
-             fill=continent))+
+  ggplot(aes(x=continent, y=gdpPercap, fill=continent))+
   geom_point(aes(color=continent), # <1>
-             position = 
-             position_jitterdodge(
-                 jitter.width = 1, 
-                 dodge.width = 0.8), 
+             position = position_jitterdodge(
+               jitter.width = 1, 
+               dodge.width = 0.8), 
              alpha=0.5, # <2>
              size=0.5)+
-  geom_boxplot(outliers=F, alpha=0.5)+
+  geom_boxplot(outliers=F, alpha=0.5)+ # <2>
   scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
   scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+ # <3>
-  labs(x="Continent",
-       y="GDP per capita",
-       title = "GDP per capita",
-       subtitle = "By continent",
-       caption = "") +
+  labs(x="Continent", y="GDP per capita",
+       title = "GDP per capita", subtitle = "By continent", caption = "") +
   coord_cartesian(ylim = c(0,50000))
 ```
 
@@ -812,7 +799,7 @@ gapminder %>%
 ```
 
 1.  `alpha=` påverkar genomskinligheten
-2.  scale_color_manual() ändrar färgen på punkterna
+2.  `scale_color_manual()` ändrar färgen på punkterna
 
 ## Lägg till regressionslinje
 
@@ -823,10 +810,8 @@ gapminder %>%
 #| fig-height: 8
 #| classes: shrink-code
 gapminder %>% 
-  ggplot(aes(x=gdpPercap, 
-             y=lifeExp, 
-             color=continent, 
-             fill=continent, 
+  ggplot(aes(x=gdpPercap, y=lifeExp, 
+             color=continent, fill=continent, 
              size=pop)) + 
   geom_point(alpha=0.5) +
   scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
@@ -848,10 +833,8 @@ Vi ändrar även färgerna så linjerna matchar punkterna
 #| classes: shrink-code
 
 gapminder %>% 
-  ggplot(aes(x=gdpPercap, 
-             y=lifeExp, 
-             color=continent, 
-             fill=continent, 
+  ggplot(aes(x=gdpPercap, y=lifeExp, 
+             color=continent, fill=continent, 
              size=pop)) + 
   geom_point(alpha=0.5) +
   scale_color_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"), name="Continent")+ # <1>
@@ -887,8 +870,8 @@ gapminder %>%
 
 1.  x-axel
 2.  y-axel
-3.  titel
-4.  sub-titel
+3.  title
+4.  subtitle
 5.  legend
 
 ## Skapa "subfigurer" per kontinent
@@ -906,11 +889,9 @@ gapminder %>%
   scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
   geom_smooth(method = "lm", se = T, linewidth=0.5, )+
   guides(size="none")+
-  labs(x="GDP per capita",
-       y="Life expectancy",
+  labs(x="GDP per capita", y="Life expectancy",
        title = "Relationship between GDP and life expecntacy",
-       subtitle = "Source: gapminder data",
-       color= "Continent", fill="Continent")+
+       subtitle = "Source: gapminder data", color= "Continent", fill="Continent")+
   facet_wrap(~ continent) # <1>
 ```
 
@@ -933,11 +914,9 @@ gapminder %>%
   scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
   geom_smooth(method = "lm", se = T, linewidth=0.5, )+
   guides(size="none")+
-  labs(x="GDP per capita",
-       y="Life expectancy",
+  labs(x="GDP per capita", y="Life expectancy",
        title = "Relationship between GDP and life expecntacy",
-       subtitle = "Source: gapminder data",
-       color= "Continent", fill="Continent")+
+       subtitle = "Source: gapminder data", color= "Continent", fill="Continent")+
   facet_wrap(~ continent) +
   theme(legend.position = "none", # <1> 
         strip.text.x = element_text(color=c("black")), # <2>
@@ -964,11 +943,9 @@ gapminder %>%
   scale_fill_manual(values=c("#16697a", "#489fb5", "#82c0cc", "#c32f27", "#ffa62b"))+
   geom_smooth(method = "lm", se = T, linewidth=0.5, )+
   guides(size="none")+
-  labs(x="GDP per capita",
-       y="Life expectancy",
+  labs(x="GDP per capita", y="Life expectancy",
        title = "Relationship between GDP and life expecntacy",
-       subtitle = "Source: gapminder data",
-       color= "Continent", fill="Continent")+
+       subtitle = "Source: gapminder data", color= "Continent", fill="Continent")+
   facet_wrap(~ continent) +
   theme(legend.position = "none",
         strip.text.x = element_text(color=c("black")),
@@ -1026,7 +1003,7 @@ animate(animation, height = 900, width =1200, units="px", res=200) # <5>
 
 1.  Ladda/installera gganimate
 2.  Spara figuren som en animation
-3.  Lägg till år som sub-title
+3.  Lägg till år som subtitle
 4.  `transition_time()` skapar själva animationen
 5.  Detta steg gör animationen synlig i "Viewer"
 
@@ -1476,7 +1453,8 @@ map_plot <- ggplot() +
   geom_sf(data=gap_world %>% filter(!is.na(year)), 
           aes(fill=lifeExp))+
   scale_fill_viridis(option="magma", na.value = "white") +
-    coord_sf(crs = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs ") + facet_wrap(~year)
+    coord_sf(crs = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +units=m +no_defs ") + 
+  facet_wrap(~year)
 
 
 ggsave("~/Downloads/map_plot.pdf", # <1>
@@ -1509,8 +1487,8 @@ ggsave("~/Downloads/map_plot.png", # <6>
 
 ## Uppgift
 
-I examinationsuppgiften ska en figur/visalisering ingå
+I examinationsuppgiften ska en figur/visualisering ingå
 
--   Resten av dagen kan användas till att göra en sådan examination
+-   Resten av dagen kan användas till att göra en sådan figur/visualisering
 
 -   Jag är kvar hela eftermiddagen för att hjälpa till om så behövs
