@@ -1,0 +1,65 @@
+/*-- scss:defaults --*/
+
+@import url(./fonts/league-gothic/league-gothic.css);
+@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic);
+
+// fonts
+$font-family-sans-serif: Lato, sans-serif !default;
+
+// colors
+$body-bg: white !default;
+//$code-block-bg: #fae3f2 !default;
+$body-color: #3A9DA3 !default;
+$link-color: #4F0433 !default;
+$selection-bg: #3A9DA3 !default;
+$code-color: var(-orange-hl-fu-color) !default;
+$primary-color: #3A9DA3 !default;
+$secondary-color: #3A9DA3 !default;
+$tertiary-color: #FF876F !default;
+$yellow-color: yellow !default;
+
+/*-- Define Bootstrap color variables --*/
+
+// The page text color.
+$body-color: $primary-color;
+// Code block background
+$code-block-bg: #DBF0F2;
+//Background color of inline code 
+$code-bg: #FF876F;
+//color of inline code
+//$code-color: $tertiary-color;
+
+//code
+$code-color: #FF876F !default;
+$font-family-monospace: 'Inconsolata', monospace  !default;
+
+
+
+// headings
+$presentation-heading-font: "Lato", "Book Antiqua", Palatino, serif !default;
+$presentation-heading-color: #3A9DA3 !default;
+
+/*-- scss:rules --*/
+
+
+
+.reveal a {
+  line-height: 1.3em;
+}
+
+
+#title-slide {
+  .title, {
+    opacity: 1;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-weight: 700;
+    font-family: "Lato";
+    text-shadow: 2px 2px 2px #3A9DA3;
+    color: white !important;
+}
+  .background: {
+    background-color: #3A9DA3;
+    
+  }
+}
